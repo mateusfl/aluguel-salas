@@ -5,12 +5,17 @@
     "": {
       "name": "aluguel-salas",
       "dependencies": {
+        "@angular/cdk": "^22",
         "@angular/common": "^22.2.0",
         "@angular/compiler": "^22.2.0",
         "@angular/core": "^22.2.0",
         "@angular/forms": "^22.2.0",
         "@angular/platform-browser": "^22.2.0",
         "@angular/router": "^22.2.0",
+        "@openng/icons": "^1.0.0",
+        "@openng/optimus-ui": "^2.0.2",
+        "@openng/optimus-ui-tailwindcss": "^2.0.2",
+        "@openng/optimus-ui-themes": "^2.0.2",
         "rxjs": "~7.8.0",
         "tslib": "^2.3.0",
       },
@@ -40,6 +45,8 @@
     "@angular-devkit/schematics": ["@angular-devkit/schematics@22.2.1", "", { "dependencies": { "@angular-devkit/core": "22.2.1", "jsonc-parser": "3.3.1", "magic-string": "1.4.1", "ora": "9.4.1", "rxjs": "7.8.2" } }, "sha512-frHhFwu2TEfTZX5jfAYL2bztuG5mGggfJhiM9bo5/QtLAi49LtRbJxIktsu6vjJdujxeB2TKD7KqnXwNYgd41Q=="],
 
     "@angular/build": ["@angular/build@22.2.1", "", { "dependencies": { "@ampproject/remapping": "2.3.0", "@angular-devkit/architect": "0.2202.1", "@babel/core": "8.0.5", "@inquirer/confirm": "6.3.2", "@parcel/watcher": "2.6.0", "@vitejs/plugin-basic-ssl": "2.3.0", "beasties": "0.5.4", "browserslist": "^4.26.0", "chokidar": "5.0.0", "esbuild": "0.28.2", "https-proxy-agent": "9.1.0", "jsonc-parser": "3.3.1", "listr2": "11.1.0", "magic-string": "1.4.1", "mrmime": "2.0.1", "oxc-parser": "0.150.0", "parse5-html-rewriting-stream": "8.0.1", "picomatch": "4.0.7", "piscina": "5.3.2", "rolldown": "1.2.8", "sass": "1.104.1", "sass-embedded": "1.104.1", "semver": "7.8.5", "source-map-support": "0.5.21", "tinyglobby": "0.2.17", "vite": "8.3.0", "xxhash-wasm": "1.1.0" }, "optionalDependencies": { "lmdb": "3.5.6" }, "peerDependencies": { "@angular/compiler": "^22.0.0", "@angular/compiler-cli": "^22.0.0", "@angular/core": "^22.0.0", "@angular/localize": "^22.0.0", "@angular/platform-browser": "^22.0.0", "@angular/platform-server": "^22.0.0", "@angular/service-worker": "^22.0.0", "@angular/ssr": "^22.2.1", "istanbul-lib-instrument": "^6.0.0", "karma": "^6.4.0", "less": "^4.2.0", "ng-packagr": "^22.0.0", "postcss": "^8.4.0", "rollup": "^4.0.0", "tailwindcss": "^2.0.0 || ^3.0.0 || ^4.0.0", "tslib": "^2.3.0", "typescript": ">=6.0 <6.1", "vitest": "^4.0.8 || ^5.0.0" }, "optionalPeers": ["@angular/core", "@angular/localize", "@angular/platform-browser", "@angular/platform-server", "@angular/service-worker", "@angular/ssr", "istanbul-lib-instrument", "karma", "less", "ng-packagr", "postcss", "rollup", "tailwindcss", "vitest"] }, "sha512-VA8EkK5Y6sJbBFyn2x5jzd3KByh29DDpI7n6hucT0sK6YkMJEvsojPUWet9ifwF3OL+ZrGvxYlAHyZGKVlqw0g=="],
+
+    "@angular/cdk": ["@angular/cdk@22.2.1", "", { "dependencies": { "parse5": "^8.0.0", "tslib": "^2.3.0" }, "peerDependencies": { "@angular/common": "^22.0.0 || ^23.0.0", "@angular/core": "^22.0.0 || ^23.0.0", "@angular/forms": "^22.0.0 || ^23.0.0", "@angular/platform-browser": "^22.0.0 || ^23.0.0", "rxjs": "^6.5.3 || ^7.4.0" } }, "sha512-0vjlqYBbLif1EwHhKz2r4thTDvtRI2CKi2js9TzPRD0n4VlFUnAXaaW47s5TCCObIoYun6Bo1zZ0uPgwb+qEMw=="],
 
     "@angular/cli": ["@angular/cli@22.2.1", "", { "dependencies": { "@angular-devkit/architect": "0.2202.1", "@angular-devkit/core": "22.2.1", "@angular-devkit/schematics": "22.2.1", "@inquirer/prompts": "8.7.2", "@listr2/prompt-adapter-inquirer": "4.2.7", "@modelcontextprotocol/server": "2.0.0", "@schematics/angular": "22.2.1", "jsonc-parser": "3.3.1", "listr2": "11.1.0", "npm-package-arg": "14.0.0", "parse5-html-rewriting-stream": "8.0.1", "semver": "7.8.5", "yargs": "18.1.0", "zod": "4.6.5" }, "bin": { "ng": "bin/ng.js" } }, "sha512-tKMP68SZP+A9YCSRg0c+2e/+yWp7qiFrjCuQAomHK7owNaxHnLigAbra+8QA4xmWHoGaQk89NMmUPyA1BsBp8w=="],
 
@@ -270,6 +277,22 @@
     "@napi-rs/nice-win32-ia32-msvc": ["@napi-rs/nice-win32-ia32-msvc@1.1.1", "", { "os": "win32", "cpu": "ia32" }, "sha512-CNQqlQT9MwuCsg1Vd/oKXiuH+TcsSPJmlAFc5frFyX/KkOh0UpBLEj7aoY656d5UKZQMQFP7vJNa1DNUNORvug=="],
 
     "@napi-rs/nice-win32-x64-msvc": ["@napi-rs/nice-win32-x64-msvc@1.1.1", "", { "os": "win32", "cpu": "x64" }, "sha512-vB+4G/jBQCAh0jelMTY3+kgFy00Hlx2f2/1zjMoH821IbplbWZOkLiTYXQkygNTzQJTq5cvwBDgn2ppHD+bglQ=="],
+
+    "@openng/icons": ["@openng/icons@1.0.0", "", {}, "sha512-BdTSHu74S3WRfbmfoT2WfmvaM3Ei32K3WiZBJTw7nVTlCvQbpCNsBqzrD5rAe4nb5IoTPjeuRb5WTG2gzrTQtw=="],
+
+    "@openng/optimus-ui": ["@openng/optimus-ui@2.0.2", "", { "dependencies": { "@openng/optimus-ui-motion": "2.0.2", "@openng/optimus-ui-styled": "2.0.2", "@openng/optimus-ui-styles": "2.0.2", "@openng/optimus-ui-utils": "2.0.2", "tslib": "^2.3.0" }, "peerDependencies": { "@angular/cdk": "^22.1.4", "@angular/common": "^22.1.4", "@angular/core": "^22.1.4", "@angular/forms": "^22.1.4", "@angular/platform-browser": "^22.1.4", "@angular/router": "^22.1.4", "rxjs": "^6.0.0 || ^7.8.1" } }, "sha512-1tzUZjFaUYoC1uAk5oOGqdwCmyCroiWaCtIDuCG3XNy8sALXQjnyMwoGHHt1nUg64nkxoj4gYlwQbsX4GcQmKA=="],
+
+    "@openng/optimus-ui-motion": ["@openng/optimus-ui-motion@2.0.2", "", { "dependencies": { "@openng/optimus-ui-utils": "2.0.2" } }, "sha512-sh3I8xYK1A+BZEqpPgPl6MaRVPJrHNbiC6hzkUXsaNhk4Uu6dEj7KEsGh89vYtFmYN6PUeR9+XnYau/k5/q45g=="],
+
+    "@openng/optimus-ui-styled": ["@openng/optimus-ui-styled@2.0.2", "", { "dependencies": { "@openng/optimus-ui-utils": "2.0.2" } }, "sha512-bCojQR6xzEoLUm2C+WfeG+MPu6XjLkLPmjU5s5DTuXcCA5W97SA0L0XdYtr/XF8G35JNBaEyyis8Fv/PdXELyA=="],
+
+    "@openng/optimus-ui-styles": ["@openng/optimus-ui-styles@2.0.2", "", { "dependencies": { "@openng/optimus-ui-styled": "2.0.2" } }, "sha512-2tOozv8KcBRynUeZ1LvEiqO3YrK4mARszXXJh6LhUujSVq7QGVtNiNu2dktW4t4EpNTXWQNILpqLL+CyA/QLVg=="],
+
+    "@openng/optimus-ui-tailwindcss": ["@openng/optimus-ui-tailwindcss@2.0.2", "", { "peerDependencies": { "tailwindcss": ">=3.1.0" } }, "sha512-JxUZ5unbEhj0meCza+jNdK/2AcI2j8iApwJsEeR1IRvmjKvphfhiD6TPj0y2EKJ7XOBXJP4T7hEcOpvxqLVTOg=="],
+
+    "@openng/optimus-ui-themes": ["@openng/optimus-ui-themes@2.0.2", "", { "dependencies": { "@openng/optimus-ui-styled": "2.0.2" } }, "sha512-nEQb83g8pssx5dJM+31sUEKwPjDX9OGZMyRoln2cvPQl7eHbFkafjgDNBL5oMHdnFVRQofmoJXgdC7sWn6XxbA=="],
+
+    "@openng/optimus-ui-utils": ["@openng/optimus-ui-utils@2.0.2", "", {}, "sha512-RgkiY91+X8h0rHI8UIKT1Pdvr352J/fSvFJ2wETYUGphCBw7j1lubhySn8yFfT6Ng+CVEZnviekvZSaBcUk2JA=="],
 
     "@oxc-parser/binding-android-arm-eabi": ["@oxc-parser/binding-android-arm-eabi@0.150.0", "", { "os": "android", "cpu": "arm" }, "sha512-oQef2Zu4Prz1KLKznz3HqZzU9uVoA5PMoDZuuLmqms7hKmKSAPzlaMnLllJq3t+rgKmfJJ2siPrpZfFrW06btw=="],
 
