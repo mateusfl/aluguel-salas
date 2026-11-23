@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "api": "bun --watch api/server.ts",
+    "dev": "bun run --parallel api start",
+    "check": "ng build && tsc -p api/tsconfig.json"
   },
   "private": true,
   "packageManager": "npm@11.12.1",
@@ -22,6 +25,7 @@
     "@openng/optimus-ui": "^2.0.2",
     "@openng/optimus-ui-tailwindcss": "^2.0.2",
     "@openng/optimus-ui-themes": "^2.0.2",
+    "hono": "^4.13.20",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -30,6 +34,7 @@
     "@angular/cli": "^22.2.1",
     "@angular/compiler-cli": "^22.2.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "@types/bun": "^1.4.5",
     "jsdom": "^30.0.0",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",
