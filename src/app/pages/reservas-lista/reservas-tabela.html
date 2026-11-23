@@ -1,0 +1,85 @@
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Quando</th>
+        <th class="hidden sm:table-cell">Sala</th>
+        <th>Responsável</th>
+        <th class="hidden text-right md:table-cell">Pessoas</th>
+        <th class="hidden text-right lg:table-cell">Valor</th>
+        <th class="hidden sm:table-cell">Situação</th>
+        <th><span class="sr-only">Ações</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (reserva of reservas(); track reserva.id) {
+        <tr class="hover:bg-base-200/60">
+          <td class="whitespace-nowrap">
+            <p class="font-semibold tabular-nums">{{ reserva.data | date }}</p>
+            <p class="text-base-content/60 text-xs tabular-nums">
+              {{ reserva.inicio }}–{{ horaFinal(reserva.inicio, reserva.horas) }}
+            </p>
+          </td>
+          <td class="hidden whitespace-nowrap sm:table-cell">{{ sala(reserva.salaId)?.nome }}</td>
+          <td class="max-w-40 sm:max-w-64">
+            <p class="flex items-center gap-1.5 font-medium">
+              <span
+                class="status status-sm sm:hidden"
+                role="img"
+                [class.status-success]="reserva.confirmada"
+                [class.status-warning]="!reserva.confirmada"
+                [attr.aria-label]="reserva.confirmada ? 'Confirmada' : 'Pendente'"
+              ></span>
+              <span class="truncate">{{ reserva.responsavel }}</span>
+            </p>
+            <p class="text-base-content/60 truncate text-xs sm:hidden">
+              {{ sala(reserva.salaId)?.nome }}
+            </p>
+            <p class="text-base-content/60 hidden truncate text-xs sm:block">
+              {{ reserva.finalidade || 'Sem finalidade informada' }}
+            </p>
+          </td>
+          <td class="hidden text-right tabular-nums md:table-cell">{{ reserva.participantes }}</td>
+          <td class="hidden text-right whitespace-nowrap tabular-nums lg:table-cell">
+            {{
+              reserva.horas * (sala(reserva.salaId)?.precoHora ?? 0)
+                | currency: 'BRL' : 'symbol' : '1.0-0'
+            }}
+          </td>
+          <td class="hidden sm:table-cell">
+            <app-selo-situacao [confirmada]="reserva.confirmada" />
+          </td>
+          <td>
+            <div class="flex justify-end gap-0.5">
+              <a
+                class="btn btn-ghost btn-sm btn-square"
+                [routerLink]="['/reservas', reserva.id]"
+                [attr.aria-label]="'Detalhar reserva de ' + reserva.responsavel"
+                title="Detalhar"
+              >
+                <app-icone nome="olho" />
+              </a>
+              <a
+                class="btn btn-ghost btn-sm btn-square hidden sm:inline-flex"
+                [routerLink]="['/reservas', reserva.id, 'editar']"
+                [attr.aria-label]="'Alterar reserva de ' + reserva.responsavel"
+                title="Alterar"
+              >
+                <app-icone nome="editar" />
+              </a>
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm btn-square text-error hidden sm:inline-flex"
+                [attr.aria-label]="'Remover reserva de ' + reserva.responsavel"
+                title="Remover"
+                (click)="remover.emit(reserva)"
+              >
+                <app-icone nome="lixeira" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

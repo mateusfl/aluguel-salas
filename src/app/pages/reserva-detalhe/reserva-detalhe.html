@@ -1,0 +1,103 @@
+<div class="motion-safe:animate-subir mx-auto flex max-w-3xl flex-col gap-5">
+  <div class="breadcrumbs text-sm">
+    <ul>
+      <li><a routerLink="/reservas">Reservas</a></li>
+      <li>Reserva nº {{ id() }}</li>
+    </ul>
+  </div>
+
+  @if (recurso.isLoading() && !reserva()) {
+    <div class="skeleton h-96" aria-label="Carregando reserva"></div>
+  } @else if (reserva(); as r) {
+    <article class="card bg-base-100 border-base-300 overflow-hidden border">
+      <header
+        class="bg-neutral text-neutral-content flex flex-wrap items-start justify-between gap-4 p-6 sm:p-8"
+      >
+        <div class="min-w-0">
+          <p class="text-neutral-content/65 text-sm">{{ sala()?.nome }} · {{ sala()?.andar }}</p>
+          <h1 class="font-display mt-1 text-3xl leading-tight">
+            {{ r.finalidade || 'Reserva de ' + r.responsavel }}
+          </h1>
+        </div>
+        <app-selo-situacao [confirmada]="r.confirmada" />
+      </header>
+
+      <dl class="border-base-300 grid grid-cols-2 border-b border-dashed md:grid-cols-4">
+        <div class="p-5">
+          <dt class="text-base-content/60 text-xs">Data</dt>
+          <dd class="mt-1 font-semibold tabular-nums">{{ r.data | date }}</dd>
+        </div>
+        <div class="p-5">
+          <dt class="text-base-content/60 text-xs">Horário</dt>
+          <dd class="mt-1 font-semibold tabular-nums">{{ r.inicio }}–{{ fim() }}</dd>
+        </div>
+        <div class="p-5">
+          <dt class="text-base-content/60 text-xs">Pessoas</dt>
+          <dd class="mt-1 font-semibold tabular-nums">
+            {{ r.participantes }} de {{ sala()?.capacidade }}
+          </dd>
+        </div>
+        <div class="p-5">
+          <dt class="text-base-content/60 text-xs">Total</dt>
+          <dd class="mt-1 font-semibold tabular-nums">
+            {{ total() | currency: 'BRL' : 'symbol' : '1.0-0' }}
+          </dd>
+        </div>
+      </dl>
+
+      <div class="card-body gap-4 p-6 sm:p-8">
+        <div>
+          <p class="text-base-content/60 text-xs">Responsável</p>
+          <p class="text-lg font-semibold">{{ r.responsavel }}</p>
+        </div>
+        @if (sala(); as s) {
+          <div>
+            <p class="text-base-content/60 text-xs">Sobre a sala</p>
+            <p class="mt-1">{{ s.descricao }}</p>
+            <div class="mt-3 flex flex-wrap gap-1.5">
+              @for (recurso of s.recursos; track recurso) {
+                <span class="badge badge-ghost badge-sm">{{ recurso }}</span>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="card-actions border-base-300 mt-2 flex-wrap justify-between border-t pt-5">
+          <button type="button" class="btn btn-ghost text-error" (click)="dialogoAberto.set(true)">
+            <app-icone nome="lixeira" />
+            Remover
+          </button>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" class="btn" [disabled]="ocupado()" (click)="alternar()">
+              <app-icone [nome]="r.confirmada ? 'relogio' : 'check'" />
+              {{ r.confirmada ? 'Marcar como pendente' : 'Confirmar' }}
+            </button>
+            <a class="btn btn-primary" [routerLink]="['/reservas', r.id, 'editar']">
+              <app-icone nome="editar" />
+              Alterar
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <app-dialogo-confirmacao
+      titulo="Remover esta reserva?"
+      rotulo="Remover reserva"
+      [(aberto)]="dialogoAberto"
+      [ocupado]="ocupado()"
+      (confirmado)="remover()"
+    >
+      A reserva de <strong>{{ r.responsavel }}</strong> será apagada. Esta ação não pode ser
+      desfeita.
+    </app-dialogo-confirmacao>
+  } @else {
+    <div class="card bg-base-100 border-base-300 border">
+      <div class="card-body items-center py-16 text-center">
+        <h1 class="font-display text-2xl">Reserva não encontrada</h1>
+        <p class="text-base-content/65">Ela pode ter sido removida.</p>
+        <a routerLink="/reservas" class="btn btn-primary mt-3">Voltar para reservas</a>
+      </div>
+    </div>
+  }
+</div>

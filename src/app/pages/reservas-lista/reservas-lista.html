@@ -1,0 +1,82 @@
+<div class="motion-safe:animate-subir flex flex-col gap-6">
+  <header class="flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="font-display text-3xl sm:text-4xl">Reservas</h1>
+      <p class="text-base-content/65 mt-1">
+        {{ reservaService.filtradas().length }}
+        {{
+          reservaService.filtradas().length === 1 ? 'reserva encontrada' : 'reservas encontradas'
+        }}
+      </p>
+    </div>
+    <a routerLink="/reservas/nova" class="btn btn-primary">
+      <app-icone nome="mais" />
+      Nova reserva
+    </a>
+  </header>
+
+  <app-reservas-filtros [(filtros)]="reservaService.filtros" [salas]="salaService.salas()" />
+
+  <section class="card bg-base-100 border-base-300 border" aria-label="Lista de reservas">
+    @if (reservaService.falhou()) {
+      <div class="card-body">
+        <div role="alert" class="alert alert-error alert-soft">
+          <app-icone nome="alerta" />
+          <span>Não foi possível carregar as reservas.</span>
+          <button type="button" class="btn btn-sm" (click)="reservaService.recarregar()">
+            Tentar de novo
+          </button>
+        </div>
+      </div>
+    } @else if (reservaService.carregando() && !reservaService.reservas().length) {
+      <div class="card-body gap-3" aria-label="Carregando reservas">
+        <div class="skeleton h-10 w-full"></div>
+        <div class="skeleton h-10 w-full"></div>
+        <div class="skeleton h-10 w-full"></div>
+      </div>
+    } @else if (visiveis().length === 0) {
+      <div class="card-body items-center py-16 text-center">
+        <span class="text-base-content/40 text-4xl"><app-icone nome="onda" /></span>
+        <h2 class="font-display mt-2 text-xl">Nenhuma reserva por aqui</h2>
+        <p class="text-base-content/65 text-sm">Ajuste os filtros ou crie uma nova reserva.</p>
+      </div>
+    } @else {
+      <app-reservas-tabela
+        [reservas]="visiveis()"
+        [salas]="salaService.salas()"
+        (remover)="alvo.set($event)"
+      />
+    }
+  </section>
+
+  @if (totalPaginas() > 1) {
+    <nav class="join self-center" aria-label="Paginação">
+      @for (numero of paginas(); track numero) {
+        <button
+          type="button"
+          class="btn btn-sm join-item"
+          [class.btn-primary]="numero === pagina()"
+          [attr.aria-current]="numero === pagina() ? 'page' : null"
+          (click)="irPara(numero)"
+        >
+          {{ numero }}
+        </button>
+      }
+    </nav>
+  }
+</div>
+
+<app-dialogo-confirmacao
+  titulo="Remover esta reserva?"
+  rotulo="Remover reserva"
+  [aberto]="alvo() !== null"
+  [ocupado]="removendo()"
+  (abertoChange)="!$event && alvo.set(null)"
+  (confirmado)="confirmarRemocao()"
+>
+  @if (alvo(); as reserva) {
+    A reserva de <strong>{{ reserva.responsavel }}</strong> na
+    <strong>{{ nomeDaSala(reserva.salaId) }}</strong> em {{ reserva.data | date }} será apagada.
+    Esta ação não pode ser desfeita.
+  }
+</app-dialogo-confirmacao>

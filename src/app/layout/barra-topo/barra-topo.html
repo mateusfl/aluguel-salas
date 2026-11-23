@@ -1,0 +1,51 @@
+<header
+  class="navbar bg-base-200/85 border-base-300 sticky top-0 z-30 border-b px-4 backdrop-blur lg:px-8"
+>
+  <div class="navbar-start">
+    <label
+      [attr.for]="idDoMenu()"
+      class="btn btn-ghost btn-square lg:hidden"
+      aria-label="Abrir menu"
+    >
+      <app-icone nome="menu" />
+    </label>
+    <span class="font-display ml-1 text-lg lg:hidden">Casa Maré</span>
+  </div>
+
+  <div class="navbar-end gap-2">
+    <button
+      type="button"
+      class="btn btn-ghost btn-square"
+      [attr.aria-label]="tema.escuro() ? 'Usar tema claro' : 'Usar tema escuro'"
+      (click)="tema.alternar()"
+    >
+      <app-icone [nome]="tema.escuro() ? 'sol' : 'lua'" />
+    </button>
+
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost gap-2 px-2" aria-label="Menu da conta">
+        <div class="avatar avatar-placeholder">
+          <div class="bg-primary text-primary-content size-8 rounded-full">
+            <span class="text-xs font-semibold">{{ iniciais() }}</span>
+          </div>
+        </div>
+        <span class="hidden text-sm font-medium sm:inline">{{ usuario()?.nome }}</span>
+      </div>
+      <ul
+        tabindex="-1"
+        class="menu dropdown-content bg-base-100 rounded-box border-base-300 z-40 mt-2 w-60 border p-2 shadow-lg"
+      >
+        <li class="menu-title">
+          <span class="text-base-content font-semibold">{{ usuario()?.nome }}</span>
+          <span class="truncate text-xs font-normal">{{ usuario()?.email }}</span>
+        </li>
+        <li>
+          <button type="button" (click)="sair.emit()">
+            <app-icone nome="sair" />
+            Sair
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

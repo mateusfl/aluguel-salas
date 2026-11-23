@@ -1,0 +1,108 @@
+<section class="card bg-base-100 border-base-300 border" aria-labelledby="titulo-agenda">
+  <div class="card-body gap-5 p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h2 id="titulo-agenda" class="font-display text-xl">Régua da maré</h2>
+        <p class="text-base-content/65 text-sm first-letter:uppercase">
+          {{ dataDoDia() | date: "EEEE, d 'de' MMMM" }}
+        </p>
+      </div>
+      <div class="join">
+        <button
+          type="button"
+          class="btn btn-sm join-item"
+          aria-label="Dia anterior"
+          (click)="mover(-1)"
+        >
+          <app-icone nome="esquerda" />
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm join-item"
+          [class.btn-primary]="ehHoje()"
+          (click)="irParaHoje()"
+        >
+          Hoje
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm join-item"
+          aria-label="Próximo dia"
+          (click)="mover(1)"
+        >
+          <app-icone nome="direita" />
+        </button>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <div class="min-w-160 pr-4">
+        <div class="ml-28 flex justify-between pb-2 sm:ml-40" aria-hidden="true">
+          @for (marca of marcas; track marca) {
+            <span class="text-base-content/55 w-0 text-center text-xs tabular-nums">
+              <span class="-translate-x-1/2 inline-block">{{ marca }}h</span>
+            </span>
+          }
+        </div>
+
+        <ul class="flex flex-col gap-2">
+          @for (linha of linhas(); track linha.sala.id) {
+            <li class="flex items-center">
+              <div class="bg-base-100 sticky left-0 z-10 w-28 shrink-0 pr-3 sm:w-40">
+                <p class="truncate text-sm font-semibold">{{ linha.sala.nome }}</p>
+                <p class="text-base-content/55 text-xs">até {{ linha.sala.capacidade }} pessoas</p>
+              </div>
+              <div
+                class="bg-base-200 relative h-12 flex-1 overflow-hidden rounded-field bg-[repeating-linear-gradient(to_right,var(--color-base-300)_0_1px,transparent_1px_calc(100%/12))]"
+              >
+                @for (bloco of linha.blocos; track bloco.reserva.id) {
+                  <a
+                    class="absolute inset-y-1 flex flex-col justify-center overflow-hidden rounded-md px-2 text-xs leading-tight transition hover:brightness-110 focus-visible:outline-2"
+                    [class]="
+                      bloco.reserva.confirmada
+                        ? 'bg-primary text-primary-content'
+                        : 'border-accent bg-accent/25 border border-dashed'
+                    "
+                    [style.left.%]="bloco.esquerda"
+                    [style.width.%]="bloco.largura"
+                    [routerLink]="['/reservas', bloco.reserva.id]"
+                    [title]="
+                      bloco.reserva.responsavel + ' · ' + bloco.reserva.inicio + '–' + bloco.fim
+                    "
+                  >
+                    <span class="truncate font-semibold">{{ bloco.reserva.responsavel }}</span>
+                    <span class="truncate opacity-80"
+                      >{{ bloco.reserva.inicio }}–{{ bloco.fim }}</span
+                    >
+                  </a>
+                }
+                @if (agora() !== null) {
+                  <span
+                    aria-hidden="true"
+                    class="bg-error absolute inset-y-0 w-0.5"
+                    [style.left.%]="agora()"
+                  ></span>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="text-base-content/65 flex flex-wrap gap-4 text-xs">
+      <span class="flex items-center gap-1.5">
+        <span class="bg-primary size-3 rounded-sm"></span> Confirmada
+      </span>
+      <span class="flex items-center gap-1.5">
+        <span class="border-accent bg-accent/25 size-3 rounded-sm border border-dashed"></span>
+        Pendente
+      </span>
+      @if (agora() !== null) {
+        <span class="flex items-center gap-1.5"
+          ><span class="bg-error h-3 w-0.5"></span> Agora</span
+        >
+      }
+    </div>
+  </div>
+</section>

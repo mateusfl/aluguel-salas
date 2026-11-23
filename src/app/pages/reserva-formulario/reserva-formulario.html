@@ -1,0 +1,202 @@
+<div class="motion-safe:animate-subir flex flex-col gap-5">
+  <div class="breadcrumbs text-sm">
+    <ul>
+      <li><a routerLink="/reservas">Reservas</a></li>
+      <li>{{ editando() ? 'Alterar reserva nº ' + id() : 'Nova reserva' }}</li>
+    </ul>
+  </div>
+
+  <h1 class="font-display text-3xl sm:text-4xl">
+    {{ editando() ? 'Alterar reserva' : 'Nova reserva' }}
+  </h1>
+
+  @if (editando() && original.error()) {
+    <div class="card bg-base-100 border-base-300 border">
+      <div class="card-body items-center py-16 text-center">
+        <h2 class="font-display text-2xl">Reserva não encontrada</h2>
+        <a routerLink="/reservas" class="btn btn-primary mt-3">Voltar para reservas</a>
+      </div>
+    </div>
+  } @else if (editando() && original.isLoading()) {
+    <div class="skeleton h-96" aria-label="Carregando reserva"></div>
+  } @else {
+    <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <form [formRoot]="formulario" class="card bg-base-100 border-base-300 border">
+        <div class="card-body gap-5 p-5 sm:p-7">
+          @for (erro of errosGerais(); track erro.message) {
+            <div role="alert" class="alert alert-error alert-soft text-sm">
+              <app-icone nome="alerta" />
+              <span>{{ erro.message }}</span>
+            </div>
+          }
+
+          <div class="grid gap-x-5 gap-y-4 sm:grid-cols-2">
+            <fieldset class="fieldset">
+              <label class="label text-base-content font-medium" for="sala">Sala</label>
+              <select
+                id="sala"
+                class="select w-full"
+                [class.select-error]="
+                  formulario.salaId().touched() && formulario.salaId().invalid()
+                "
+                [formField]="formulario.salaId"
+              >
+                <option value="" disabled [selected]="!modelo().salaId">Selecione uma sala</option>
+                @for (s of salaService.salas(); track s.id) {
+                  <option [value]="s.id" [selected]="s.id === modelo().salaId">
+                    {{ s.nome }} · até {{ s.capacidade }} pessoas
+                  </option>
+                }
+              </select>
+              <app-erros-campo [estado]="formulario.salaId()" />
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <label class="label text-base-content font-medium" for="responsavel"
+                >Responsável</label
+              >
+              <input
+                id="responsavel"
+                type="text"
+                autocomplete="name"
+                placeholder="Nome de quem reserva"
+                class="input w-full"
+                [class.input-error]="
+                  formulario.responsavel().touched() && formulario.responsavel().invalid()
+                "
+                [formField]="formulario.responsavel"
+              />
+              <app-erros-campo [estado]="formulario.responsavel()" />
+            </fieldset>
+          </div>
+
+          <fieldset class="fieldset">
+            <label class="label text-base-content justify-between font-medium" for="finalidade">
+              Finalidade
+              <span class="text-base-content/55 text-xs font-normal">
+                {{ formulario.finalidade().value().length }}/120 · opcional
+              </span>
+            </label>
+            <textarea
+              id="finalidade"
+              rows="2"
+              placeholder="Ex.: Planejamento trimestral do time"
+              class="textarea w-full"
+              [class.textarea-error]="
+                formulario.finalidade().touched() && formulario.finalidade().invalid()
+              "
+              [formField]="formulario.finalidade"
+            ></textarea>
+            <app-erros-campo [estado]="formulario.finalidade()" />
+          </fieldset>
+
+          <div class="grid gap-x-5 gap-y-4 sm:grid-cols-3">
+            <fieldset class="fieldset">
+              <label class="label text-base-content font-medium" for="data">Data</label>
+              <input
+                id="data"
+                type="date"
+                class="input w-full"
+                [class.input-error]="formulario.data().touched() && formulario.data().invalid()"
+                [formField]="formulario.data"
+              />
+              <app-erros-campo [estado]="formulario.data()" />
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <label class="label text-base-content font-medium" for="inicio">Início</label>
+              <select
+                id="inicio"
+                class="select w-full"
+                [class.select-error]="
+                  formulario.inicio().touched() && formulario.inicio().invalid()
+                "
+                [formField]="formulario.inicio"
+              >
+                <option value="" disabled [selected]="!modelo().inicio">Horário</option>
+                @for (horario of horarios; track horario) {
+                  <option [value]="horario" [selected]="horario === modelo().inicio">
+                    {{ horario }}
+                  </option>
+                }
+              </select>
+              @if (formulario.inicio().pending()) {
+                <p class="text-base-content/65 flex items-center gap-1.5 text-xs">
+                  <span class="loading loading-spinner loading-xs"></span> Verificando agenda
+                </p>
+              } @else if (horarioLivre()) {
+                <p class="text-success flex items-center gap-1 text-xs font-medium">
+                  <app-icone nome="check" /> Horário livre
+                </p>
+              }
+              <app-erros-campo [estado]="formulario.inicio()" />
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <label class="label text-base-content font-medium" for="participantes">Pessoas</label>
+              <input
+                id="participantes"
+                type="number"
+                inputmode="numeric"
+                class="input w-full"
+                [class.input-error]="
+                  formulario.participantes().touched() && formulario.participantes().invalid()
+                "
+                [formField]="formulario.participantes"
+              />
+              <app-erros-campo [estado]="formulario.participantes()" />
+            </fieldset>
+          </div>
+
+          <fieldset class="fieldset">
+            <label class="label text-base-content justify-between font-medium" for="horas">
+              Duração
+              <span class="badge badge-primary badge-soft badge-sm">
+                {{ formulario.horas().value() }}
+                {{ formulario.horas().value() === 1 ? 'hora' : 'horas' }}
+              </span>
+            </label>
+            <input
+              id="horas"
+              type="range"
+              step="1"
+              class="range range-primary range-sm w-full"
+              [formField]="formulario.horas"
+            />
+            <app-erros-campo [estado]="formulario.horas()" />
+          </fieldset>
+
+          <label
+            class="border-base-300 flex cursor-pointer items-center justify-between gap-4 rounded-field border p-4"
+          >
+            <span>
+              <span class="block text-sm font-medium">Reserva confirmada</span>
+              <span class="text-base-content/60 block text-xs"
+                >Desligue enquanto aguarda o retorno do cliente.</span
+              >
+            </span>
+            <input
+              type="checkbox"
+              class="toggle toggle-primary"
+              [formField]="formulario.confirmada"
+            />
+          </label>
+
+          <div class="card-actions justify-end">
+            <a class="btn btn-ghost" [routerLink]="destinoCancelar()">Cancelar</a>
+            <button type="submit" class="btn btn-primary" [disabled]="formulario().submitting()">
+              @if (formulario().submitting()) {
+                <span class="loading loading-spinner loading-sm"></span>
+              } @else {
+                <app-icone nome="check" />
+              }
+              {{ editando() ? 'Salvar alterações' : 'Criar reserva' }}
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <app-resumo-reserva class="lg:sticky lg:top-24" [dados]="modelo()" [sala]="salaEscolhida()" />
+    </div>
+  }
+</div>

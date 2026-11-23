@@ -1,0 +1,109 @@
+<div class="motion-safe:animate-subir flex flex-col gap-6">
+  <header class="flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1 class="font-display text-3xl sm:text-4xl">{{ saudacao() }}</h1>
+      <p class="text-base-content/65 mt-1">Veja como está a casa e o que precisa da sua atenção.</p>
+    </div>
+    <a routerLink="/reservas/nova" class="btn btn-primary">
+      <app-icone nome="mais" />
+      Nova reserva
+    </a>
+  </header>
+
+  @if (reservaService.falhou() || salaService.falhou()) {
+    <div role="alert" class="alert alert-error alert-soft">
+      <app-icone nome="alerta" />
+      <span>Não foi possível carregar os dados da API.</span>
+      <button
+        type="button"
+        class="btn btn-sm"
+        (click)="reservaService.recarregar(); salaService.recarregar()"
+      >
+        Tentar de novo
+      </button>
+    </div>
+  } @else if (reservaService.carregando() && !reservaService.reservas().length) {
+    <div class="grid gap-4 md:grid-cols-3" aria-label="Carregando painel">
+      <div class="skeleton h-28"></div>
+      <div class="skeleton h-28"></div>
+      <div class="skeleton h-28"></div>
+    </div>
+    <div class="skeleton h-96"></div>
+  } @else {
+    <div class="stats stats-vertical md:stats-horizontal bg-base-100 border-base-300 w-full border">
+      <div class="stat">
+        <div class="stat-figure text-primary text-2xl"><app-icone nome="calendario" /></div>
+        <div class="stat-title">Reservas hoje</div>
+        <div class="stat-value font-display font-normal">{{ totalHoje() }}</div>
+        <div class="stat-desc">em {{ salaService.salas().length }} salas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-figure text-accent text-2xl"><app-icone nome="relogio" /></div>
+        <div class="stat-title">Ocupação hoje</div>
+        <div class="stat-value font-display font-normal">{{ ocupacao() }}%</div>
+        <div class="stat-desc">das horas disponíveis</div>
+      </div>
+      <div class="stat">
+        <div class="stat-figure text-success text-2xl"><app-icone nome="onda" /></div>
+        <div class="stat-title">Receita prevista</div>
+        <div class="stat-value font-display font-normal">
+          {{ receitaSemana() | currency: 'BRL' : 'symbol' : '1.0-0' }}
+        </div>
+        <div class="stat-desc">nos próximos 7 dias</div>
+      </div>
+    </div>
+
+    <app-agenda-dia
+      [salas]="salaService.salas()"
+      [reservas]="reservaService.reservas()"
+      [(dia)]="dia"
+    />
+
+    <section class="card bg-base-100 border-base-300 border" aria-labelledby="titulo-pendentes">
+      <div class="card-body p-5 sm:p-6">
+        <div class="flex items-center justify-between gap-3">
+          <h2 id="titulo-pendentes" class="font-display text-xl">Aguardando confirmação</h2>
+          <a routerLink="/reservas" class="link link-hover text-sm">Ver todas</a>
+        </div>
+
+        @if (aguardando().length === 0) {
+          <p class="text-base-content/65 py-4 text-sm">
+            Nada pendente. A maré está calma por aqui.
+          </p>
+        } @else {
+          <ul class="list -mx-2">
+            @for (reserva of aguardando(); track reserva.id) {
+              <li class="list-row items-center px-2">
+                <div class="bg-base-200 w-14 rounded-field py-1 text-center">
+                  <p class="font-display text-lg leading-tight">{{ reserva.data | date: 'dd' }}</p>
+                  <p class="text-base-content/60 text-xs">{{ reserva.data | date: 'MMM' }}</p>
+                </div>
+                <a [routerLink]="['/reservas', reserva.id]" class="min-w-0 hover:underline">
+                  <p class="truncate font-semibold">{{ reserva.responsavel }}</p>
+                  <p class="text-base-content/65 truncate text-sm">
+                    {{ nomeDaSala(reserva.salaId) }} · {{ reserva.inicio }}–{{
+                      horaFinal(reserva.inicio, reserva.horas)
+                    }}
+                  </p>
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary btn-soft"
+                  [disabled]="confirmando() === reserva.id"
+                  (click)="confirmar(reserva)"
+                >
+                  @if (confirmando() === reserva.id) {
+                    <span class="loading loading-spinner loading-xs"></span>
+                  } @else {
+                    <app-icone nome="check" />
+                  }
+                  Confirmar
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </section>
+  }
+</div>

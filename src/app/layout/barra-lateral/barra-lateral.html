@@ -1,0 +1,70 @@
+<aside
+  class="bg-neutral text-neutral-content relative flex min-h-dvh w-64 flex-col overflow-hidden"
+>
+  <a routerLink="/painel" class="flex items-center gap-3 px-6 pt-7 pb-8" (click)="navegou.emit()">
+    <span
+      class="bg-accent text-accent-content grid size-10 place-items-center rounded-full text-xl"
+    >
+      <app-icone nome="onda" />
+    </span>
+    <span>
+      <span class="font-display block text-xl leading-none">Casa Maré</span>
+      <span class="text-neutral-content/60 mt-1 block text-xs">Ribeira, Natal/RN</span>
+    </span>
+  </a>
+
+  <nav aria-label="Navegação principal" class="px-3">
+    <ul
+      class="menu w-full gap-1 [--menu-active-bg:var(--color-accent)] [--menu-active-fg:var(--color-accent-content)]"
+    >
+      @for (item of itens; track item.rota) {
+        <li>
+          <a
+            class="py-2.5 font-medium"
+            [routerLink]="item.rota"
+            routerLinkActive="menu-active"
+            [routerLinkActiveOptions]="{ exact: item.exato }"
+            (click)="navegou.emit()"
+          >
+            <app-icone [nome]="item.icone" />
+            {{ item.rotulo }}
+            @if (item.rota === '/reservas' && pendentes() > 0) {
+              <span
+                class="badge badge-sm badge-warning ml-auto"
+                [attr.aria-label]="pendentes() + ' pendentes'"
+              >
+                {{ pendentes() }}
+              </span>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="px-6 pt-6">
+    <a routerLink="/reservas/nova" class="btn btn-accent btn-block" (click)="navegou.emit()">
+      <app-icone nome="mais" />
+      Nova reserva
+    </a>
+  </div>
+
+  <div class="relative z-10 mt-auto px-6 pb-6 text-xs">
+    <p class="text-neutral-content/60">Funcionamento</p>
+    <p class="font-medium">Todos os dias, das 08h às 20h</p>
+  </div>
+
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 256 120"
+    preserveAspectRatio="none"
+    class="text-primary noite:opacity-15 pointer-events-none absolute inset-x-0 bottom-0 h-32 w-full opacity-60"
+  >
+    <path
+      fill="currentColor"
+      opacity="0.45"
+      d="M0 42c32-18 64-18 96 0s64 18 96 0 46-16 64-8v86H0z"
+    />
+    <path fill="currentColor" d="M0 76c32-16 64-16 96 0s64 16 96 0 46-14 64-6v50H0z" />
+  </svg>
+</aside>
